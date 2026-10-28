@@ -1,0 +1,14 @@
+{
+  "name": "perfil-checkup",
+  "version": "1.0.0",
+  "description": "Analisa um perfil do GitHub pelos olhos de um recrutador e diz o que corrigir primeiro.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "checkup": "node cli.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}

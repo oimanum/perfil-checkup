@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Perfil Checkup</title>
+  <meta name="description" content="Veja seu perfil do GitHub pelos olhos de um recrutador e descubra o que corrigir primeiro.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Perfil Checkup</h1>
+      <p class="sub">Seu GitHub visto por um recrutador. Nota de 0 a 100 e uma lista do que corrigir primeiro.</p>
+    </header>
+
+    <form id="form" autocomplete="off">
+      <label for="login">Usuário do GitHub</label>
+      <div class="linha">
+        <input id="login" name="login" placeholder="ex.: oimanum" required maxlength="40" spellcheck="false">
+        <button type="submit" id="enviar">Analisar</button>
+      </div>
+    </form>
+
+    <p id="status" role="status" aria-live="polite"></p>
+
+    <section id="resultado" hidden>
+      <div class="resumo">
+        <div class="nota" id="nota" aria-label="Nota do perfil"></div>
+        <div>
+          <h2 id="nivel"></h2>
+          <p id="quem"></p>
+        </div>
+      </div>
+
+      <h3>O que fazer primeiro</h3>
+      <ol id="passos"></ol>
+
+      <h3>Critério por critério</h3>
+      <ul id="criterios"></ul>
+    </section>
+
+    <footer>
+      <p>Usa só a API pública do GitHub, direto do seu navegador. Nada é guardado em servidor.</p>
+    </footer>
+  </main>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

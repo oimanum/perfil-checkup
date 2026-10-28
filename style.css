@@ -1,0 +1,95 @@
+:root {
+  --fundo: #0f1115;
+  --cartao: #181b22;
+  --borda: #2a2f3a;
+  --texto: #e8eaf0;
+  --suave: #9aa3b5;
+  --destaque: #7c9cff;
+  --ok: #3ecf8e;
+  --meio: #f5b83d;
+  --ruim: #ff6b6b;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --fundo: #f6f7fb;
+    --cartao: #ffffff;
+    --borda: #dfe3ee;
+    --texto: #1b1f2a;
+    --suave: #5b6478;
+    --destaque: #3b5bdb;
+    --ok: #1a9d62;
+    --meio: #b7791f;
+    --ruim: #d64545;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+main { max-width: 720px; margin: 0 auto; padding: 40px 16px 64px; }
+
+h1 { margin: 0; font-size: 2rem; letter-spacing: -0.02em; }
+h2 { margin: 0; font-size: 1.3rem; }
+h3 { margin: 32px 0 12px; font-size: 1rem; color: var(--suave); text-transform: uppercase; letter-spacing: 0.06em; }
+.sub { color: var(--suave); margin: 4px 0 28px; }
+
+label { display: block; font-size: 0.9rem; color: var(--suave); margin-bottom: 6px; }
+.linha { display: flex; gap: 8px; }
+
+input, button { font: inherit; border-radius: 10px; border: 1px solid var(--borda); padding: 12px 14px; }
+input { flex: 1; background: var(--cartao); color: var(--texto); min-width: 0; }
+input:focus-visible, button:focus-visible { outline: 2px solid var(--destaque); outline-offset: 2px; }
+button { background: var(--destaque); color: #fff; border-color: transparent; font-weight: 600; cursor: pointer; }
+button:disabled { opacity: 0.6; cursor: progress; }
+
+#status { min-height: 1.6em; color: var(--suave); margin: 12px 0 0; }
+#status.erro { color: var(--ruim); }
+
+.resumo {
+  display: flex; align-items: center; gap: 20px;
+  background: var(--cartao); border: 1px solid var(--borda); border-radius: 16px;
+  padding: 20px; margin-top: 12px;
+}
+.resumo p { margin: 2px 0 0; color: var(--suave); }
+
+.nota {
+  --cor: var(--ok);
+  --pct: 0;
+  flex: none; width: 96px; height: 96px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 1.9rem; font-weight: 700;
+  background:
+    radial-gradient(closest-side, var(--cartao) 78%, transparent 80%),
+    conic-gradient(var(--cor) calc(var(--pct) * 1%), var(--borda) 0);
+}
+
+ol, ul { padding: 0; margin: 0; list-style: none; }
+
+#passos li {
+  background: var(--cartao); border: 1px solid var(--borda); border-left: 4px solid var(--destaque);
+  border-radius: 10px; padding: 12px 14px; margin-bottom: 8px;
+}
+#passos strong { display: block; }
+#passos small { color: var(--ok); font-weight: 600; }
+#passos p { margin: 4px 0 0; color: var(--suave); }
+
+#criterios li {
+  display: grid; grid-template-columns: 1fr auto; gap: 2px 12px;
+  padding: 10px 0; border-bottom: 1px solid var(--borda);
+}
+#criterios .detalhe { grid-column: 1; color: var(--suave); font-size: 0.9rem; }
+#criterios .pontos { grid-row: 1; grid-column: 2; font-variant-numeric: tabular-nums; font-weight: 600; }
+#criterios .completo .pontos { color: var(--ok); }
+#criterios .parcial .pontos { color: var(--meio); }
+#criterios .zerado .pontos { color: var(--ruim); }
+
+footer { margin-top: 48px; color: var(--suave); font-size: 0.85rem; }
+
+[hidden] { display: none !important; }
