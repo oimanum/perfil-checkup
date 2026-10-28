@@ -1,5 +1,7 @@
 # 🔍 Perfil Checkup
 
+**👉 [Testar agora: oimanum.github.io/perfil-checkup](https://oimanum.github.io/perfil-checkup/)**
+
 Seu perfil do GitHub visto por um recrutador. Digite um usuário e receba uma **nota de 0 a 100** e uma lista do **que corrigir primeiro**, ordenada por quantos pontos cada ajuste rende.
 
 Nasceu de um problema real: recrutador gasta poucos segundos no seu perfil, e a maioria das pessoas nunca descobre o que está atrapalhando.
@@ -17,7 +19,7 @@ A nota soma 10 critérios (total 100 pontos):
 | Projetos com demo online | 8 |
 | Projetos próprios publicados | 8 |
 | Bio preenchida | 8 |
-| Forma de contato visível | 8 |
+| Forma de contato visível (site, e-mail ou rede social) | 8 |
 | Variedade de linguagens | 6 |
 | Código autoral (não só forks) | 6 |
 
@@ -57,7 +59,7 @@ Usam o `node:test` nativo, sem dependências. Cobrem a pontuação (perfil compl
 ## Limitações conhecidas
 
 - Analisa os 100 repositórios mais recentemente atualizados (uma página da API).
-- Sem token, a API pública permite 60 requisições por hora por IP; cada análise usa 3.
+- Sem token, a API pública permite 60 requisições por hora por IP; cada análise usa 4.
 - Os repositórios fixados do perfil não aparecem na API REST, então não entram na nota.
 
 ## Estrutura

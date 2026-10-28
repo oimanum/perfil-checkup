@@ -23,6 +23,7 @@ test("validarLogin aceita @ e espaços, e rejeita nomes inválidos", () => {
 
 test("junta usuário, repositórios e README de perfil", async () => {
   const fetchFn = fetchFalso({
+    "/social_accounts": resposta(200, []),
     "/readme": resposta(200),
     "/repos?": resposta(200, [{ name: "a" }]),
     "/users/ana": resposta(200, { login: "ana" }),
@@ -31,10 +32,12 @@ test("junta usuário, repositórios e README de perfil", async () => {
   assert.equal(dados.usuario.login, "ana");
   assert.equal(dados.repos.length, 1);
   assert.equal(dados.temReadmePerfil, true);
+  assert.deepEqual(dados.contasSociais, []);
 });
 
 test("sem README de perfil (404) não é erro", async () => {
   const fetchFn = fetchFalso({
+    "/social_accounts": resposta(200, []),
     "/readme": resposta(404),
     "/repos?": resposta(200, []),
     "/users/ana": resposta(200, { login: "ana" }),
@@ -43,25 +46,36 @@ test("sem README de perfil (404) não é erro", async () => {
 });
 
 test("usuário inexistente vira erro amigável", async () => {
-  const fetchFn = fetchFalso({ "/readme": resposta(404), "/repos?": resposta(404), "/users/fantasma": resposta(404) });
+  const fetchFn = fetchFalso({ "/social_accounts": resposta(404), "/readme": resposta(404), "/repos?": resposta(404), "/users/fantasma": resposta(404) });
   await assert.rejects(buscarDadosGitHub("fantasma", fetchFn), { codigo: "nao-encontrado" });
 });
 
 test("limite da API (403) é identificado", async () => {
-  const fetchFn = fetchFalso({ "/readme": resposta(403), "/repos?": resposta(403), "/users/ana": resposta(403) });
+  const fetchFn = fetchFalso({ "/social_accounts": resposta(404), "/readme": resposta(403), "/repos?": resposta(403), "/users/ana": resposta(403) });
   await assert.rejects(buscarDadosGitHub("ana", fetchFn), { codigo: "limite" });
 });
 
 test("falha de rede vira erro amigável", async () => {
-  const fetchFn = fetchFalso({ "/readme": new Error("offline"), "/repos?": new Error("offline"), "/users/ana": new Error("offline") });
+  const fetchFn = fetchFalso({ "/social_accounts": resposta(404), "/readme": new Error("offline"), "/repos?": new Error("offline"), "/users/ana": new Error("offline") });
   await assert.rejects(buscarDadosGitHub("ana", fetchFn), { codigo: "rede" });
 });
 
 test("erro 500 no README não é confundido com 'sem README'", async () => {
   const fetchFn = fetchFalso({
+    "/social_accounts": resposta(200, []),
     "/readme": resposta(500),
     "/repos?": resposta(200, []),
     "/users/ana": resposta(200, { login: "ana" }),
   });
   await assert.rejects(buscarDadosGitHub("ana", fetchFn), { codigo: "http" });
+});
+
+test("traz as redes sociais do perfil; se esse endpoint falhar, segue sem elas", async () => {
+  const base = { "/readme": resposta(404), "/repos?": resposta(200, []), "/users/ana": resposta(200, { login: "ana" }) };
+
+  const com = await buscarDadosGitHub("ana", fetchFalso({ "/social_accounts": resposta(200, [{ provider: "linkedin" }]), ...base }));
+  assert.equal(com.contasSociais.length, 1);
+
+  const falhou = await buscarDadosGitHub("ana", fetchFalso({ "/social_accounts": resposta(500), ...base }));
+  assert.deepEqual(falhou.contasSociais, []);
 });

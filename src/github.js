@@ -41,10 +41,11 @@ export async function buscarDadosGitHub(entrada, fetchFn = globalThis.fetch) {
   const login = validarLogin(entrada);
   const base = encodeURIComponent(login);
 
-  const [resUsuario, resRepos, resReadme] = await Promise.all([
+  const [resUsuario, resRepos, resReadme, resSociais] = await Promise.all([
     pedir(`${API}/users/${base}`, fetchFn),
     pedir(`${API}/users/${base}/repos?per_page=100&sort=pushed`, fetchFn),
     pedir(`${API}/repos/${base}/${base}/readme`, fetchFn),
+    pedir(`${API}/users/${base}/social_accounts`, fetchFn),
   ]);
 
   if (!resUsuario.ok) throw erroDeResposta(resUsuario);
@@ -52,9 +53,17 @@ export async function buscarDadosGitHub(entrada, fetchFn = globalThis.fetch) {
   // 404 aqui só significa "não tem README de perfil"; outros erros não devem virar falso negativo.
   if (!resReadme.ok && resReadme.status !== 404) throw erroDeResposta(resReadme);
 
+  // Redes sociais (ex.: LinkedIn) ficam num endpoint à parte. Se falhar, só deixamos de contá-las.
+  let contasSociais = [];
+  if (resSociais.ok) {
+    const lista = await resSociais.json();
+    if (Array.isArray(lista)) contasSociais = lista;
+  }
+
   return {
     usuario: await resUsuario.json(),
     repos: await resRepos.json(),
     temReadmePerfil: resReadme.ok,
+    contasSociais,
   };
 }

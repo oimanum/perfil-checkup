@@ -105,12 +105,12 @@ const criterios = [
     id: "contato",
     titulo: "Forma de contato visível",
     max: 8,
-    avaliar: ({ usuario }) => {
-      const tem = preenchido(usuario.blog) || preenchido(usuario.email);
+    avaliar: ({ usuario, contasSociais }) => {
+      const tem = preenchido(usuario.blog) || preenchido(usuario.email) || contasSociais.length > 0;
       return {
         fracao: tem ? 1 : 0,
-        detalhe: tem ? "Há site ou e-mail público no perfil." : "Nenhum site ou e-mail público.",
-        dica: "Preencha o campo 'Website' (pode ser seu LinkedIn) ou deixe um e-mail público.",
+        detalhe: tem ? "Há site, e-mail ou rede social no perfil." : "Nenhum site, e-mail ou rede social público.",
+        dica: "Adicione seu LinkedIn em 'Social accounts', preencha o 'Website' ou deixe um e-mail público.",
       };
     },
   },
@@ -147,10 +147,10 @@ export const NIVEIS = [
 ];
 
 /**
- * @param {{ usuario: object, repos: object[], temReadmePerfil: boolean }} dados
+ * @param {{ usuario: object, repos: object[], temReadmePerfil: boolean, contasSociais?: object[] }} dados
  * @param {Date} [agora] injetável para os testes serem determinísticos
  */
-export function analisarPerfil({ usuario, repos, temReadmePerfil }, agora = new Date()) {
+export function analisarPerfil({ usuario, repos, temReadmePerfil, contasSociais = [] }, agora = new Date()) {
   if (!usuario || !Array.isArray(repos)) {
     throw new TypeError("analisarPerfil precisa de { usuario, repos, temReadmePerfil }");
   }
@@ -160,6 +160,7 @@ export function analisarPerfil({ usuario, repos, temReadmePerfil }, agora = new 
     repos,
     proprios: repos.filter((r) => !r.fork),
     temReadmePerfil: Boolean(temReadmePerfil),
+    contasSociais: Array.isArray(contasSociais) ? contasSociais : [],
     login: usuario.login,
     agora,
   };

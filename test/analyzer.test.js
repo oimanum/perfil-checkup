@@ -89,3 +89,11 @@ test("dados inválidos geram erro claro", () => {
   assert.throws(() => analisarPerfil({ usuario: null, repos: [] }), TypeError);
   assert.throws(() => analisarPerfil({ usuario: {}, repos: "não é lista" }), TypeError);
 });
+
+test("LinkedIn em 'Social accounts' conta como forma de contato", () => {
+  const resultado = analisarPerfil(
+    { usuario: { login: "f" }, repos: [], temReadmePerfil: false, contasSociais: [{ provider: "linkedin" }] },
+    AGORA,
+  );
+  assert.equal(resultado.criterios.find((c) => c.id === "contato").pontos, 8);
+});
